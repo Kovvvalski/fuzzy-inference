@@ -16,8 +16,6 @@ public class ParserTest {
         var parsedSets = testParser.parseFuzzySet();
         System.out.println(parsedSets);
         List<FuzzyImplication> parsedImplList = testParser.parseFuzzyImplication(parsedSets);
-        for (FuzzyImplication impl : parsedImplList) {
-            System.out.println(FuzzyImplication.compute(Util::godelImplication, impl.getSet1(), impl.getSet2()));
-        }
+        parsedImplList.forEach(System.out::println);
     }
 }

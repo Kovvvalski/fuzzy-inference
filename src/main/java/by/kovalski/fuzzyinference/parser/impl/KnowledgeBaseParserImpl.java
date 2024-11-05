@@ -3,6 +3,7 @@ package by.kovalski.fuzzyinference.parser.impl;
 import by.kovalski.fuzzyinference.entity.FuzzyImplication;
 import by.kovalski.fuzzyinference.entity.FuzzySet;
 import by.kovalski.fuzzyinference.parser.KnowledgeBaseParser;
+import by.kovalski.fuzzyinference.util.Util;
 import by.kovalski.fuzzyinference.validator.KnowledgeBaseValidator;
 
 import java.io.BufferedReader;
@@ -90,6 +91,13 @@ public class KnowledgeBaseParserImpl implements KnowledgeBaseParser {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+        for (var impl : resultList) {
+            impl.setImplicationMatrix(
+                    FuzzyImplication.compute(Util::lukasiewiczImplication,
+                            impl.getSet1(),
+                            impl.getSet2()).getImplicationMatrix()
+            );
         }
         return resultList;
     }
