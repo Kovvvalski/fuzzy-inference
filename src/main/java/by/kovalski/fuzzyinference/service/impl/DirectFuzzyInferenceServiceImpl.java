@@ -1,6 +1,6 @@
 package by.kovalski.fuzzyinference.service.impl;
 
-import by.kovalski.fuzzyinference.entity.ImplicationMatrix;
+import by.kovalski.fuzzyinference.entity.FuzzyImplication;
 import by.kovalski.fuzzyinference.entity.FuzzySet;
 import by.kovalski.fuzzyinference.entity.Pair;
 import by.kovalski.fuzzyinference.service.DirectFuzzyInferenceService;
@@ -11,7 +11,7 @@ import java.util.function.BiFunction;
 
 public class DirectFuzzyInferenceServiceImpl implements DirectFuzzyInferenceService {
     @Override
-    public FuzzySet makeInference(FuzzySet set, ImplicationMatrix implication, BiFunction<Double, Double, Double> tNorm, String resName) {
+    public FuzzySet makeInference(FuzzySet set, FuzzyImplication implication, BiFunction<Double, Double, Double> tNorm, String resName) {
         Map<String, Double> maxValues = new HashMap<>();
         for (Map.Entry<String, Double> setElement : set.getElements().entrySet()) {
             for (Pair<String, Double> implElement :

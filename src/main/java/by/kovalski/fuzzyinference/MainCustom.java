@@ -1,6 +1,6 @@
 package by.kovalski.fuzzyinference;
 
-import by.kovalski.fuzzyinference.entity.ImplicationMatrix;
+import by.kovalski.fuzzyinference.entity.FuzzyImplication;
 import by.kovalski.fuzzyinference.entity.FuzzySet;
 import by.kovalski.fuzzyinference.service.DirectFuzzyInferenceService;
 import by.kovalski.fuzzyinference.service.impl.DirectFuzzyInferenceServiceImpl;
@@ -37,15 +37,15 @@ public class MainCustom {
         FuzzySet fuzzySet2 = new FuzzySet("B", set2);
         FuzzySet fuzzySet3 = new FuzzySet("C", set3);
 
-        ImplicationMatrix implicationMatrix = ImplicationMatrix.compute(Util::godelImplication,
+        FuzzyImplication fuzzyImplication = FuzzyImplication.compute(Util::godelImplication,
                 fuzzySet1, fuzzySet2);
 
         System.out.println(fuzzySet1);
         System.out.println(fuzzySet2);
         System.out.println(fuzzySet3);
-        System.out.println(implicationMatrix);
+        System.out.println(fuzzyImplication);
 
-        FuzzySet inference = inferenceService.makeInference(fuzzySet3, implicationMatrix, Util::minTNorm, "Y'");
+        FuzzySet inference = inferenceService.makeInference(fuzzySet3, fuzzyImplication, Util::minTNorm, "Y'");
         System.out.println(inference);
     }
 }
