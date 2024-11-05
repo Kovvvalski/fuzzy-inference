@@ -27,15 +27,15 @@ public class KnowledgeBaseParserImpl implements KnowledgeBaseParser {
     @Override
     public List<FuzzySet> parseFuzzySet() {
         List<FuzzySet> resultList = new ArrayList<>();
-        try (var in = this.fileOpen()){
+        try (var in = this.fileOpen()) {
             String fuzzySetStr;
-            Map<String, Double> fuzzySetElements = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             while ((fuzzySetStr = in.readLine()) != null) {
+                Map<String, Double> fuzzySetElements = new HashMap<>();
                 if (kbValidator.validateFuzzySet(fuzzySetStr)) {
                     boolean readActive = false;
                     for (char letter : fuzzySetStr.toCharArray()) {
-                        switch(letter) {
+                        switch (letter) {
                             case '<':
                                 readActive = true;
                                 break;
@@ -64,15 +64,34 @@ public class KnowledgeBaseParserImpl implements KnowledgeBaseParser {
     }
 
     @Override
-    public List<FuzzyImplication> parseFuzzyImplication() {
+    public List<FuzzyImplication> parseFuzzyImplication(List<FuzzySet> parsedSets) {
         List<FuzzyImplication> resultList = new ArrayList<>();
         try (var in = this.fileOpen()) {
             String fuzzyImplicationStr;
-            StringBuilder sb = new StringBuilder();
+            while ((fuzzyImplicationStr = in.readLine()) != null) {
+                if (this.kbValidator.validateFuzzyImplication(fuzzyImplicationStr)) {
+                    String[] implicants = fuzzyImplicationStr.split("~>");
+                    FuzzySet set1 = null;
+                    FuzzySet set2 = null;
+                    for (FuzzySet set : parsedSets) {
+                        if (set.getName().equals(implicants[0].trim()
+                                .substring(0, implicants[0].indexOf('(')))) {
+                            set1 = set;
+                        }
+                        if (set.getName().equals(implicants[1].trim()
+                                .substring(0, implicants[1].indexOf('(')-1))) {
+                            set2 = set;
+                        }
+                    }
+                    if (set1 != null && set2 != null) {
+                        resultList.add(new FuzzyImplication(set1, set2, null));
+                    }
+                }
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        return resultList;
     }
 
     private BufferedReader fileOpen() throws FileNotFoundException {
