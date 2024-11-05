@@ -19,6 +19,14 @@ public class FuzzyImplication {
         return implicationMatrix;
     }
 
+    public FuzzySet getSet1() {
+        return set1;
+    }
+
+    public FuzzySet getSet2() {
+        return set2;
+    }
+
     public static FuzzyImplication compute(BiFunction<Double, Double, Double> implFunction,
                                            FuzzySet set1, FuzzySet set2) {
 

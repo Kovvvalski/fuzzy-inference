@@ -1,6 +1,7 @@
 package by.kovalski.fuzzyinference.entity;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class FuzzySet {
     final String name;
@@ -17,6 +18,19 @@ public class FuzzySet {
 
     public Map<String, Double> getElements() {
         return elements;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FuzzySet fuzzySet = (FuzzySet) o;
+        return Objects.equals(name, fuzzySet.name) && Objects.equals(elements, fuzzySet.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, elements);
     }
 
     @Override
