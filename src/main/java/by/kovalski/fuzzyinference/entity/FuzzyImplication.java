@@ -7,11 +7,23 @@ public class FuzzyImplication {
 
     final FuzzySet set1;
     final FuzzySet set2;
-    final Map<String, List<Pair<String, Double>>> implicationMatrix;
+    Map<String, List<Pair<String, Double>>> implicationMatrix;
 
-    FuzzyImplication(FuzzySet set1, FuzzySet set2, Map<String, List<Pair<String, Double>>> implicationMatrix) {
+    public FuzzyImplication(FuzzySet set1, FuzzySet set2, Map<String, List<Pair<String, Double>>> implicationMatrix) {
         this.set1 = set1;
         this.set2 = set2;
+        this.implicationMatrix = implicationMatrix;
+    }
+
+    public FuzzySet getSet1() {
+        return set1;
+    }
+
+    public FuzzySet getSet2() {
+        return set2;
+    }
+
+    public void setImplicationMatrix(Map<String, List<Pair<String, Double>>> implicationMatrix) {
         this.implicationMatrix = implicationMatrix;
     }
 

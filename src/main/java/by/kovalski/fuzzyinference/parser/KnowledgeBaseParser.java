@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface KnowledgeBaseParser {
 
-    public List<FuzzySet> parseFuzzySet();
+    List<FuzzySet> parseFuzzySet();
 
-    public List<FuzzyImplication> parseFuzzyImplication();
+    List<FuzzyImplication> parseFuzzyImplication(List<FuzzySet> parsedSets);
 }

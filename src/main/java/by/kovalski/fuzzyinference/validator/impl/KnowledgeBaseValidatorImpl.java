@@ -12,11 +12,13 @@ public class KnowledgeBaseValidatorImpl implements KnowledgeBaseValidator {
 
     @Override
     public boolean validateFuzzySet(String fuzzySet) {
-        return true;
+        String FUZZY_SET_REGEX = "^[a-zA-Z][0-9]? = \\{(<[a-z][0-9]?, ?[0|1].[0-9]+>, ?)*<[a-z][0-9]?, ?[0|1].[0-9]+>\\}$";
+        return fuzzySet.matches(FUZZY_SET_REGEX);
     }
 
     @Override
     public boolean validateFuzzyImplication(String fuzzyImplication) {
-        return true;
+        String FUZZY_IMPLICATION_REGEX = "^[a-zA-Z][0-9]?\\([a-z]\\) ~> [a-zA-Z][0-9]?\\([a-z]\\)$";
+        return fuzzyImplication.matches(FUZZY_IMPLICATION_REGEX);
     }
 }
