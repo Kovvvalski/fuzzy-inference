@@ -51,8 +51,16 @@ public class FuzzyImplication {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        implicationMatrix.forEach((key, value) -> {
-            implicationMatrix.get(key).forEach(implValue -> stringBuilder.append(implValue.getValue()).append(" "));
+
+        // Add column headers
+        stringBuilder.append("    ");
+        set2.getElements().keySet().forEach(header -> stringBuilder.append(header).append(" "));
+        stringBuilder.append("\n");
+
+        // Add rows with row headers and values
+        implicationMatrix.forEach((rowKey, rowValues) -> {
+            stringBuilder.append(rowKey).append(": ");
+            rowValues.forEach(implValue -> stringBuilder.append(implValue.getValue()).append(" "));
             stringBuilder.append("\n");
         });
 

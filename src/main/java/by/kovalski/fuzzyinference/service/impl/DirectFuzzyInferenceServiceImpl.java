@@ -13,9 +13,7 @@ public class DirectFuzzyInferenceServiceImpl implements DirectFuzzyInferenceServ
     public FuzzySet makeInference(FuzzySet set, FuzzyImplication implication, BiFunction<Double, Double, Double> tNorm, String resName) {
         Map<String, Double> maxValues = new HashMap<>();
         for (Map.Entry<String, Double> setElement : set.getElements().entrySet()) {
-            for (Pair<String, Double> implElement :
-                    implication.getImplicationMatrix().get(setElement.getKey())) {
-
+            for (Pair<String, Double> implElement : implication.getImplicationMatrix().get(setElement.getKey())) {
                 Double newVarValue = tNorm.apply(setElement.getValue(), implElement.getValue());
                 String varName = implElement.getKey();
                 maxValues.put(varName,
@@ -32,28 +30,43 @@ public class DirectFuzzyInferenceServiceImpl implements DirectFuzzyInferenceServ
     public List<FuzzySet> makeInferenceFromKB(List<FuzzySet> sets, List<FuzzyImplication> implications,
                                               BiFunction<Double, Double, Double> tNorm) {
         Queue<FuzzySet> setsQueue = new LinkedList<>(sets);
-        List<FuzzySet> out = new ArrayList<>();
-        int setCounter = 0;
+        List<FuzzySet> outputSets = new ArrayList<>(sets);
+        int setCounter = 1;
+
         while (!setsQueue.isEmpty()) {
-            FuzzySet set = setsQueue.poll();
+            FuzzySet currentSet = setsQueue.poll();
+
             for (FuzzyImplication implication : implications) {
-                if (implication.getSet1().getElements().keySet().equals(set.getElements().keySet())) {
-                    FuzzySet calculated = makeInference(set, implication, tNorm, "S" + setCounter);
-                    if (out.stream().anyMatch(s -> s.getElements().equals(calculated.getElements()))) {
-                        System.out.println(set.getName() + "/~\\" + "(" +
-                                implication.getSet1().getName() + "~>" + implication.getSet2().getName() + ")" +
-                                "=" + calculated + "=" + implication.getSet2().getName());
+                if (implication.getSet1().getElements().keySet().equals(currentSet.getElements().keySet())) {
+                    FuzzySet inferredSet = makeInference(currentSet, implication, tNorm, String.valueOf(setCounter));
+
+                    Optional<FuzzySet> duplicateSet = outputSets.stream()
+                            .filter(s -> s.getElements().equals(inferredSet.getElements()))
+                            .findFirst();
+
+                    if (duplicateSet.isPresent()) {
+                        logInference(currentSet, implication, inferredSet, duplicateSet.get());
                     } else {
-                        System.out.println(set.getName() + "/~\\" + "(" +
-                                implication.getSet1().getName() + "~>" + implication.getSet2().getName() + ")" +
-                                "=" + calculated);
-                        setsQueue.add(calculated);
-                        out.add(calculated);
-                        setCounter++;
+                        logInference(currentSet, implication, inferredSet, null);
+                        setsQueue.add(inferredSet);
+                        outputSets.add(inferredSet);
                     }
+                    setCounter++;
                 }
             }
         }
-        return out;
+
+        return outputSets;
+    }
+
+    private void logInference(FuzzySet currentSet, FuzzyImplication implication, FuzzySet inferredSet, FuzzySet duplicateSet) {
+        String implicationStr = String.format("%s -> %s", implication.getSet1().getName(), implication.getSet2().getName());
+        String resultStr = String.format("%s /~\\ (%s) = %s", currentSet.getName(), implicationStr, inferredSet);
+
+        if (duplicateSet != null) {
+            System.out.println(resultStr + " = " + duplicateSet.getName());
+        } else {
+            System.out.println(resultStr);
+        }
     }
 }
